@@ -34,54 +34,35 @@ function App() {
     latitude: "",
     longitude: "",
   });
-  const [cityName, setCityName] = useState("");
-
-  // useEffect(() => {
-  //   // console.log(cityName);
-  //   // console.log("update");
-  // }, [cityName, placement, weatherConditions]);
+  const [cityName, setCityName] = useState("Suwalki");
 
   useEffect(() => {
-    try {
-      getPlacement(cityName).then((cordinates) => {
-        setPlacement({
-          latitude: cordinates[0].lat,
-          longitude: cordinates[0].lon,
-        });
+    getPlacement(cityName).then((cordinates) => {
+      setPlacement({
+        latitude: cordinates[0].lat,
+        longitude: cordinates[0].lon,
       });
-    } catch (error) {
-      console.log(error);
-    }
+    });
   }, [cityName, weatherConditions]);
 
-  const handleSubmit = async (e: BaseSyntheticEvent) => {
+  useEffect(() => {
+    getWeather(placement)
+      .then((extractedResp) => {
+        setWeatherConditions(extractedResp);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
+  }, [placement]);
+
+  const handleClick = (e: BaseSyntheticEvent) => {
     e.preventDefault();
     setIsButtonClicked(true);
   };
 
-  const handleChange = async (e: BaseSyntheticEvent) => {
+  const handleChange = (e: BaseSyntheticEvent) => {
     setCityName(e.target.value);
-    // try {
-    //   await getPlacement(cityName).then((cordinates) => {
-    //     setPlacement({
-    //       latitude: cordinates[0].lat,
-    //       longitude: cordinates[0].lon,
-    //     });
-    //   });
-    // } catch (error) {
-    //   console.log(error);
-    // }
-    try {
-      await getWeather(placement)
-        .then((extractedResp) => {
-          setWeatherConditions(extractedResp);
-        })
-        .catch((error) => {
-          console.log(error);
-        });
-    } catch (error) {
-      console.log(error);
-    }
+    setIsButtonClicked(false);
   };
 
   const renderWeather = () => {
@@ -99,26 +80,19 @@ function App() {
 
   return (
     <>
-      {/* <form onSubmit={handleSubmit}> */}
       <p>Wybierz miasto</p>
       <br />
       <div>
         <select onChange={handleChange}>
-          <option value="Suwalki">Suwalki</option>
-          <option value="Gdansk">Gdansk</option>
-          <option value="Warszawa">Warszawa</option>
-          <option value="Krakow">Krakow</option>
-
-          {
-            // w tagu option wczytaj z API lokalizacke
-          }
+          <option value="Suwalki">Suwałki</option>
+          <option value="Gdansk">Gdańsk</option>
+          <option value="Warsaw">Warszawa</option>
+          <option value="Krakow">Kraków</option>
         </select>
       </div>
       <br />
-
-      <button onClick={handleSubmit}>Sprawdź aktualną pogodę</button>
+      <button onClick={handleClick}>Sprawdź aktualną pogodę</button>
       {isButtonClicked === false ? <p>naciśnij przycisk</p> : renderWeather()}
-      {/* </form> */}
     </>
   );
 }
