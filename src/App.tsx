@@ -3,6 +3,7 @@
 
 import { BaseSyntheticEvent, useEffect, useState } from "react";
 import "./App.css";
+import { fetchMount } from "./functions/fetchMount.js";
 import { getPlacement } from "./functions/getPlacement.js";
 import { getWeather } from "./functions/getWeather.js";
 
@@ -31,18 +32,32 @@ function App() {
   });
   const [isButtonClicked, setIsButtonClicked] = useState(false);
   const [placement, setPlacement] = useState<Placement>({
-    latitude: "",
-    longitude: "",
+    latitude: "54.10",
+    longitude: "22.93",
   });
   const [cityName, setCityName] = useState("Suwalki");
 
   useEffect(() => {
-    getPlacement(cityName).then((cordinates) => {
-      setPlacement({
-        latitude: cordinates[0].lat,
-        longitude: cordinates[0].lon,
+    fetchMount()
+      .then((extractedResp) => {
+        setWeatherConditions(extractedResp);
+      })
+      .catch((error) => {
+        console.log(error);
       });
-    });
+  }, []);
+
+  useEffect(() => {
+    getPlacement(cityName)
+      .then((extractedResp) => {
+        setPlacement({
+          latitude: extractedResp[0].lat,
+          longitude: extractedResp[0].lon,
+        });
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }, [cityName, weatherConditions]);
 
   useEffect(() => {
