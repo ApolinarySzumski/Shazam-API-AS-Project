@@ -4,6 +4,7 @@
 import { BaseSyntheticEvent, useEffect, useState } from "react";
 import "./App.css";
 import { Placement, Weather } from "./AppTypes.js";
+import { AddCityForm } from "./Components/AddCityForm.js";
 import { Button } from "./Components/Button.js";
 import { Header } from "./Components/Header.js";
 import { RenderWeather } from "./Components/RenderWeather.js";
@@ -11,6 +12,8 @@ import { SelectionMenu } from "./Components/SelectionMenu.js";
 import { fetchMount } from "./Functions/fetchMount.js";
 import { getPlacement } from "./Functions/getPlacement.js";
 import { getWeather } from "./Functions/getWeather.js";
+
+export type Options = Array<string>;
 
 function App() {
   const [weatherConditions, setWeatherConditions] = useState<Weather>({
@@ -26,6 +29,8 @@ function App() {
     longitude: "22.93",
   });
   const [cityName, setCityName] = useState("Suwalki");
+  const [cityToAdd, setCityToAdd] = useState("");
+  const [options, setOptions] = useState<Options>(["Suwałki"]);
 
   useEffect(() => {
     fetchMount()
@@ -65,13 +70,29 @@ function App() {
     setIsButtonClicked(true);
   };
 
+  const handleChange = (e: BaseSyntheticEvent) => {
+    setCityToAdd(e.target.value);
+  };
+
+  const handleSubmit = (e: BaseSyntheticEvent) => {
+    e.preventDefault();
+    setOptions([...options, cityToAdd]);
+  };
+
   return (
     <>
       <Header />
       <br />
+      <AddCityForm
+        handleSubmit={handleSubmit}
+        handleChange={handleChange}
+        cityToAdd={cityToAdd}
+      />
+      <br />
       <SelectionMenu
         setCityName={setCityName}
         setIsButtonClicked={setIsButtonClicked}
+        options={options}
       />
       <br />
       <Button handleClick={handleClick} />

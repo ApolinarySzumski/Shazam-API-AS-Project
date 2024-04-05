@@ -1,12 +1,15 @@
+import { nanoid } from "nanoid";
 import { BaseSyntheticEvent } from "react";
+import { Options } from "../App";
 
 type SelectionMenu = {
   setCityName: React.Dispatch<React.SetStateAction<string>>;
   setIsButtonClicked: React.Dispatch<React.SetStateAction<boolean>>;
+  options: Options;
 };
 
 export const SelectionMenu = (props: SelectionMenu) => {
-  const { setCityName, setIsButtonClicked } = props;
+  const { setCityName, setIsButtonClicked, options } = props;
 
   const handleChange = (e: BaseSyntheticEvent) => {
     setCityName(e.target.value);
@@ -14,14 +17,12 @@ export const SelectionMenu = (props: SelectionMenu) => {
   };
 
   return (
-    <div>
+    <>
       <select onChange={handleChange}>
-        <option value="Suwalki">Suwałki</option>
-        <option value="Elbląg">Elbląg</option>
-        <option value="Warsaw">Warszawa</option>
-        <option value="Gdansk">Gdańsk</option>
-        <option value="Krakow">Kraków</option>
+        {options.map((option) => (
+          <option key={nanoid()}>{option}</option>
+        ))}
       </select>
-    </div>
+    </>
   );
 };
