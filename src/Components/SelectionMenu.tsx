@@ -1,5 +1,5 @@
 import { nanoid } from "nanoid";
-import { BaseSyntheticEvent } from "react";
+import { BaseSyntheticEvent, useEffect } from "react";
 import { Options } from "../App";
 
 type SelectionMenu = {
@@ -11,6 +11,10 @@ type SelectionMenu = {
 export const SelectionMenu = (props: SelectionMenu) => {
   const { setCityName, setIsButtonClicked, options } = props;
 
+  useEffect(() => {
+    localStorage.setItem("cities", JSON.stringify(options));
+  }, [options]);
+
   const handleChange = (e: BaseSyntheticEvent) => {
     setCityName(e.target.value);
     setIsButtonClicked(false);
@@ -18,7 +22,10 @@ export const SelectionMenu = (props: SelectionMenu) => {
 
   return (
     <>
-      <select onChange={handleChange}>
+      <select onChange={handleChange} defaultValue="Wybierz miasto">
+        <option value="Wybierz miasto" disabled>
+          Wybierz miasto
+        </option>
         {options.map((option) => (
           <option key={nanoid()}>{option}</option>
         ))}

@@ -25,12 +25,12 @@ function App() {
   });
   const [isButtonClicked, setIsButtonClicked] = useState(false);
   const [placement, setPlacement] = useState<Placement>({
-    latitude: "54.10",
-    longitude: "22.93",
+    latitude: "54,11",
+    longitude: "22,93",
   });
-  const [cityName, setCityName] = useState("Suwalki");
+  const [cityName, setCityName] = useState("");
   const [cityToAdd, setCityToAdd] = useState("");
-  const [options, setOptions] = useState<Options>(["Suwałki"]);
+  const [options, setOptions] = useState<Options>([]);
 
   useEffect(() => {
     fetchMount()
@@ -76,7 +76,11 @@ function App() {
 
   const handleSubmit = (e: BaseSyntheticEvent) => {
     e.preventDefault();
-    setOptions([...options, cityToAdd]);
+    if (options.includes(cityToAdd)) {
+      console.log("error");
+    } else {
+      setOptions([...options, cityToAdd]);
+    }
   };
 
   return (
@@ -94,6 +98,7 @@ function App() {
         setIsButtonClicked={setIsButtonClicked}
         options={options}
       />
+      <br />
       <br />
       <Button handleClick={handleClick} />
       {isButtonClicked === false ? (
